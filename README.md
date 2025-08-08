@@ -180,3 +180,165 @@
 
 </body>
 </html>
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RD Lottery - Color Prediction Game</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      color: #333;
+      text-align: center;
+    }
+    header {
+      background: #673ab7;
+      color: white;
+      padding: 15px 0;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .container {
+      padding: 20px;
+    }
+    .timer {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .round-count {
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .number-box {
+      width: 60px;
+      height: 60px;
+      margin: 5px;
+      border-radius: 50%;
+      font-size: 20px;
+      line-height: 60px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+    }
+    .green { background: green; }
+    .red { background: red; }
+    .result {
+      margin-top: 15px;
+      font-size: 18px;
+    }
+    .history {
+      margin-top: 20px;
+      font-size: 16px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .account, .service, .payment {
+      background: white;
+      margin: 20px 10px;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    @media screen and (max-width: 600px) {
+      .number-box {
+        width: 45px;
+        height: 45px;
+        line-height: 45px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body><header>RD Lottery</header><div class="container">
+  <div class="round-count">Game Count: <span id="gameCount">1</span></div>
+  <div class="timer">⏱ Time Left: <span id="timer">30</span>s</div>  <div class="grid" id="numberGrid">
+    <!-- Boxes will be added here by JS -->
+  </div>  <div class="result">Result: <span id="result">Pending...</span></div>
+  <div class="history" id="history">History:<br></div>  <div class="account">
+    <h3>Account</h3>
+    <p>Balance: ₹<span id="balance">1000</span></p>
+  </div>  <div class="payment">
+    <h3>Payment Section</h3>
+    <button onclick="addFunds(500)">Add ₹500</button>
+    <button onclick="addFunds(1000)">Add ₹1000</button>
+  </div>  <div class="service">
+    <h3>Customer Service</h3>
+    <p>Contact us at: <b>support@rdlottery.com</b></p>
+  </div>
+</div><script>
+  const greenNums = [0, 2, 4, 6, 8];
+  const redNums = [1, 3, 5, 7, 9];
+  const grid = document.getElementById("numberGrid");
+  const resultSpan = document.getElementById("result");
+  const historyDiv = document.getElementById("history");
+  const balanceSpan = document.getElementById("balance");
+  const gameCountSpan = document.getElementById("gameCount");
+
+  let timer = 30;
+  let gameCount = 1;
+  let interval;
+  let userBets = {};
+
+  function startGame() {
+    timer = 30;
+    userBets = {};
+    resultSpan.innerText = 'Pending...';
+    grid.innerHTML = '';
+    for (let i = 0; i <= 9; i++) {
+      const box = document.createElement("div");
+      box.classList.add("number-box");
+      box.classList.add(greenNums.includes(i) ? "green" : "red");
+      box.innerText = i;
+      box.onclick = () => placeBet(i);
+      grid.appendChild(box);
+    }
+    interval = setInterval(() => {
+      document.getElementById("timer").innerText = timer;
+      if (timer === 0) {
+        clearInterval(interval);
+        showResult();
+      }
+      timer--;
+    }, 1000);
+  }
+
+  function placeBet(number) {
+    if (!userBets[number]) userBets[number] = 0;
+    userBets[number] += 1;
+    balanceSpan.innerText = parseInt(balanceSpan.innerText) - 10;
+    alert("Bet placed on number: " + number);
+  }
+
+  function showResult() {
+    let leastBet = Infinity;
+    let result = 0;
+    for (let i = 0; i <= 9; i++) {
+      const bet = userBets[i] || 0;
+      if (bet < leastBet) {
+        leastBet = bet;
+        result = i;
+      }
+    }
+    resultSpan.innerText = result;
+    historyDiv.innerHTML += `Round ${gameCount}: ${result}<br>`;
+    gameCount++;
+    gameCountSpan.innerText = gameCount;
+    setTimeout(startGame, 5000);
+  }
+
+  function addFunds(amount) {
+    balanceSpan.innerText = parseInt(balanceSpan.innerText) + amount;
+    alert(`₹${amount} added to your account.`);
+  }
+
+  startGame();
+</script></body>
+</html>
