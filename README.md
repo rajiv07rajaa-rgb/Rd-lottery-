@@ -1,323 +1,182 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Color Trading Website</title>
+  <title>RD Lottery Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      text-align: center;
-      padding: 20px;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+    body { background: #f1f1f1; }
+    header { background: #000; color: #fff; padding: 15px; text-align: center; font-size: 24px; }
+    nav { display: flex; justify-content: space-around; background: #222; color: white; padding: 10px; }
+    nav a { color: white; text-decoration: none; }
+    .container { padding: 20px; text-align: center; }
 
-    h1 {
-      color: #333;
-    }
+    /* Game board */
+    .game-board { margin-top: 20px; }
+    .number-row { display: flex; justify-content: center; margin: 10px 0; }
+    .number { width: 60px; height: 60px; border-radius: 50%; margin: 5px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; font-weight: bold; }
+    .green { background-color: green; }
+    .red { background-color: red; }
 
-    .color-box {
-      width: 100px;
-      height: 100px;
-      margin: 20px auto;
-      border-radius: 10px;
-      border: 3px solid #333;
-    }
+    /* Bet buttons */
+    .bet-buttons { margin: 20px 0; }
+    .bet-buttons button { padding: 10px 20px; font-size: 18px; margin: 5px; }
 
-    select {
-      padding: 10px;
-      font-size: 16px;
-    }
+    /* Timer */
+    .timer { font-size: 24px; font-weight: bold; margin-top: 10px; }
 
-    .buttons {
-      margin-top: 20px;
-    }
+    /* History */
+    .history { margin-top: 20px; }
+    .history h3 { margin-bottom: 10px; }
+    .history-box { background: #ddd; padding: 10px; border-radius: 5px; max-height: 150px; overflow-y: auto; }
 
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+    /* Sections */
+    .section { margin: 20px 0; padding: 10px; background: #fff; border-radius: 10px; }
 
-    .buy {
-      background-color: green;
-      color: white;
-    }
+    /* Login form */
+    .login { display: none; padding: 40px; text-align: center; }
+    .login input { margin: 10px; padding: 10px; width: 200px; }
 
-    .sell {
-      background-color: red;
-      color: white;
-    }
+    /* Show/Hide */
+    .hide { display: none; }
+    .show { display: block; }
 
-    .history {
-      margin-top: 30px;
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
-      background: #fff;
-      border: 1px solid #ddd;
-      padding: 15px;
-      border-radius: 10px;
-    }
-
-    .history h3 {
-      margin-bottom: 10px;
-    }
-
-    .history ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .history li {
-      padding: 5px 0;
-      border-bottom: 1px solid #eee;
-    }
   </style>
 </head>
 <body>
 
-  <h1>🎨 Color Trading Website</h1>
+<header>RD Lottery</header>
+<nav>
+  <a href="#" onclick="showPage('game')">Game</a>
+  <a href="#" onclick="showPage('account')">Account</a>
+  <a href="#" onclick="showPage('services')">Services</a>
+  <a href="#" onclick="showPage('admin')">Admin</a>
+</nav>
 
-  <label for="colorSelect">Select a Color:</label>
-  <select id="colorSelect" onchange="updateColor()">
-    <option value="blue">Blue</option>
-    <option value="green">Green</option>
-    <option value="red">Red</option>
-    <option value="orange">Orange</option>
-    <option value="purple">Purple</option>
-  </select><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Color Trading - Login/Register</title>
-  <style>
-    body { font-family: Arial; padding: 20px; background: #f2f2f2; }
-    .box { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h2 { text-align: center; }
-    input, button { width: 100%; padding: 10px; margin: 10px 0; }
-    .hidden { display: none; }
-  </style>
-</head>
-<body>
-  <div class="box">
-    <h2 id="formTitle">Login</h2>
-    <input type="text" id="username" placeholder="Username" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="submitForm()">Submit</button>
-    <p id="toggleText">New user? <a href="#" onclick="toggleForm()">Register here</a></p>
+<!-- LOGIN FORM -->
+<div class="login" id="loginPage">
+  <h2>Login to RD Lottery</h2>
+  <input type="text" placeholder="Username"><br>
+  <input type="password" placeholder="Password"><br>
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- GAME PAGE -->
+<div class="container show" id="gamePage">
+  <div class="section">
+    <h2>Choose Color to Bet</h2>
+    <div class="bet-buttons">
+      <button class="green" onclick="placeBet('Green')">Green</button>
+      <button class="red" onclick="placeBet('Red')">Red</button>
+    </div>
+
+    <div class="game-board">
+      <div class="number-row">
+        <div class="number green">0</div>
+        <div class="number red">1</div>
+        <div class="number green">2</div>
+        <div class="number red">3</div>
+        <div class="number green">4</div>
+      </div>
+      <div class="number-row">
+        <div class="number red">5</div>
+        <div class="number green">6</div>
+        <div class="number red">7</div>
+        <div class="number green">8</div>
+        <div class="number red">9</div>
+      </div>
+    </div>
+
+    <div class="timer" id="timer">00:30</div>
+    <button onclick="startTimer()">Start 30s Timer</button>
+    <button onclick="startMinute()">Start 1 Minute</button>
   </div>
 
-  <script src="script.js"></script>
+  <div class="history section">
+    <h3>Result History</h3>
+    <div class="history-box" id="historyLog"></div>
+  </div>
+</div>
+
+<!-- ACCOUNT PAGE -->
+<div class="container section hide" id="accountPage">
+  <h2>Account Details</h2>
+  <p>Username: demo_user</p>
+  <p>Balance: ₹10,000</p>
+</div>
+
+<!-- SERVICES PAGE -->
+<div class="container section hide" id="servicesPage">
+  <h2>Services</h2>
+  <p>24x7 Support, Instant Withdrawals, Game Updates etc.</p>
+</div>
+
+<!-- ADMIN PAGE -->
+<div class="container section hide" id="adminPage">
+  <h2>Admin Panel</h2>
+  <p>Manage users, view reports, update results etc.</p>
+</div>
+
+<script>
+  // Login simulation
+  function login() {
+    document.getElementById('loginPage').classList.add('hide');
+    document.getElementById('gamePage').classList.add('show');
+  }
+
+  // Navigation
+  function showPage(page) {
+    document.getElementById('gamePage').classList.add('hide');
+    document.getElementById('accountPage').classList.add('hide');
+    document.getElementById('servicesPage').classList.add('hide');
+    document.getElementById('adminPage').classList.add('hide');
+
+    document.getElementById(page + 'Page').classList.remove('hide');
+  }
+
+  // Timer
+  let timerInterval;
+  function startTimer(duration = 30) {
+    clearInterval(timerInterval);
+    let time = duration;
+    const display = document.getElementById("timer");
+
+    timerInterval = setInterval(() => {
+      let minutes = Math.floor(time / 60);
+      let seconds = time % 60;
+      display.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      time--;
+
+      if (time < 0) {
+        clearInterval(timerInterval);
+        display.textContent = "Time Over!";
+        logResult();
+      }
+    }, 1000);
+  }
+
+  function startMinute() {
+    startTimer(60);
+  }
+
+  // Betting result log
+  function placeBet(color) {
+    const log = document.getElementById("historyLog");
+    const time = new Date().toLocaleTimeString();
+    const entry = document.createElement("div");
+    entry.textContent = `Bet on ${color} at ${time}`;
+    log.prepend(entry);
+  }
+
+  function logResult() {
+    const log = document.getElementById("historyLog");
+    const time = new Date().toLocaleTimeString();
+    const entry = document.createElement("div");
+    entry.textContent = `Result shown at ${time}`;
+    log.prepend(entry);
+  }
+</script>
+
 </body>
 </html>
-
-  <div class="color-box" id="colorBox"></div>
-
-  <div class="buttons">
-    <button class="buy" onclick="trade('Buy')">Buy</button>
-    <button class="sell" onclick="trade('Sell')">Sell</button>
-  </div>
-
-  <div class="history">
-    <h3>📈 Trade History</h3>
-    <ul id="tradeHistory">
-      <!-- history items will go here -->
-    </ul>
-  </div>
-
-  <script>
-    const colorBox = document.getElementById('colorBox');
-    const tradeHistory = document.getElementById('tradeHistory');
-
-    function updateColor() {
-      const selectedColor = document.getElementById('colorSelect').value;
-      colorBox.style.backgroundColor = selectedColor;
-    }
-
-    function trade(action) {
-      const color = document.getElementById('colorSelect').value;
-      const time = new Date().toLocaleTimeString();
-      const li = document.createElement('li');
-      li.textContent = `${action} ${color} at ${time}`;
-      tradeHistory.prepend(li);
-    }
-
-    // Set initial color
-    updateColor();
-  </script>
-
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Panel</title>
-  <style>
-    body { font-family: Arial; padding: 20px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid #ccc; padding: 8px; }
-    th { background: #f0f0f0; }
-  </style>
-</head>
-<body>
-  <h2>Admin Panel</h2>
-  <table id="userTable">
-    <thead><tr><th>Username</th><th>Balance</th><th>Action</th></tr></thead>
-    <tbody></tbody>
-  </table><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Color Trading - Login/Register</title>
-  <style>
-    body { font-family: Arial; padding: 20px; background: #f2f2f2; }
-    .box { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h2 { text-align: center; }
-    input, button { width: 100%; padding: 10px; margin: 10px 0; }
-    .hidden { display: none; }
-  </style>
-</head>
-<body>
-  <div class="box">
-    <h2 id="formTitle">Login</h2>
-    <input type="text" id="username" placeholder="Username" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="submitForm()">Submit</button>
-    <p id="toggleText">New user? <a href="#" onclick="toggleForm()">Register here</a></p>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
-
-  <script src="script.js"></script>
-</body>
-</html>let users = JSON.parse(localStorage.getItem("users")) || {};
-
-function submitForm() {
-  const user = document.getElementById("username").value;
-  const pass = document.getElementById("password").value;
-  const mode = document.getElementById("formTitle").innerText;
-
-  if (mode === "Register") {
-    if (users[user]) return alert("User already exists");
-    users[user] = { password: pass, balance: 10000 };
-    localStorage.setItem("users", JSON.stringify(users));
-    alert("Registered successfully! Now login.");
-    toggleForm();
-  } else {
-    if (!users[user] || users[user].password !== pass) return alert("Invalid login");
-    localStorage.setItem("currentUser", user);
-    alert("Login successful!");
-    // Yaha redirect karo tumhare color trading page pe
-    window.location.href = "trade.html";
-  }
-}
-
-function toggleForm() {
-  const title = document.getElementById("formTitle");
-  const toggle = document.getElementById("toggleText");
-  if (title.innerText === "Login") {
-    title.innerText = "Register";
-    toggle.innerHTML = 'Already registered? <a href="#" onclick="toggleForm()">Login here</a>';
-  } else {
-    title.innerText = "Login";
-    toggle.innerHTML = 'New user? <a href="#" onclick="toggleForm()">Register here</a>';
-  }
-}
-
-// Admin Panel
-if (window.location.pathname.includes("admin.html")) {
-  const tableBody = document.querySelector("#userTable tbody");
-  Object.entries(users).forEach(([u, d]) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `<td>${u}</td><td>${d.balance}</td><td><button onclick="resetBalance('${u}')">Reset</button></td>`;
-    tableBody.appendChild(row);
-  });
-}
-
-function resetBalance(username) {
-  users[username].balance = 10000;
-  localStorage.setItem("users", JSON.stringify(users));
-  alert("Balance reset for " + username);
-  location.reload();
-}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Panel</title>
-  <style>
-    body { font-family: Arial; padding: 20px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid #ccc; padding: 8px; }
-    th { background: #f0f0f0; }
-  </style>
-</head>
-<body>
-  <h2>Admin Panel</h2>
-  <table id="userTable">
-    <thead><tr><th>Username</th><th>Balance</th><th>Action</th></tr></thead>
-    <tbody></tbody>
-  </table>
-
-  <script src="script.js"></script>
-</body>
-</html>let users = JSON.parse(localStorage.getItem("users")) || {};
-
-function submitForm() {
-  const user = document.getElementById("username").value;
-  const pass = document.getElementById("password").value;
-  const mode = document.getElementById("formTitle").innerText;
-
-  if (mode === "Register") {
-    if (users[user]) return alert("User already exists");
-    users[user] = { password: pass, balance: 10000 };
-    localStorage.setItem("users", JSON.stringify(users));
-    alert("Registered successfully! Now login.");
-    toggleForm();
-  } else {
-    if (!users[user] || users[user].password !== pass) return alert("Invalid login");
-    localStorage.setItem("currentUser", user);
-    alert("Login successful!");
-    // Yaha redirect karo tumhare color trading page pe
-    window.location.href = "trade.html";
-  }
-}
-
-function toggleForm() {
-  const title = document.getElementById("formTitle");
-  const toggle = document.getElementById("toggleText");
-  if (title.innerText === "Login") {
-    title.innerText = "Register";
-    toggle.innerHTML = 'Already registered? <a href="#" onclick="toggleForm()">Login here</a>';
-  } else {
-    title.innerText = "Login";
-    toggle.innerHTML = 'New user? <a href="#" onclick="toggleForm()">Register here</a>';
-  }
-}
-
-// Admin Panel
-if (window.location.pathname.includes("admin.html")) {
-  const tableBody = document.querySelector("#userTable tbody");
-  Object.entries(users).forEach(([u, d]) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `<td>${u}</td><td>${d.balance}</td><td><button onclick="resetBalance('${u}')">Reset</button></td>`;
-    tableBody.appendChild(row);
-  });
-}
-
-function resetBalance(username) {
-  users[username].balance = 10000;
-  localStorage.setItem("users", JSON.stringify(users));
-  alert("Balance reset for " + username);
-  location.reload();
-}
